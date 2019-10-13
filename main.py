@@ -5,6 +5,7 @@ import os
 from functools import reduce
 import sys
 import openpyxl as xl
+from openpyxl.styles import Alignment
 
 
 def compare(df_1, df_2):
@@ -48,8 +49,10 @@ def cleanup(filename, frames):
     """Add company names from frames above data and tidy column names."""
     workbook = xl.load_workbook(filename)
     ws = workbook.active
+    alignment = Alignment(horizontal="center", vertical="bottom")
     for i in range(2, 2 * len(frames) + 1, 2):
         ws.cell(row=1, column=i).value = frames[int(i / 2) - 1][0]
+        ws.cell(row=1, column=i).alignment = alignment
         ws.merge_cells(
             start_row=1, start_column=i, end_row=1, end_column=i + 1
         )
@@ -57,6 +60,13 @@ def cleanup(filename, frames):
         ws.cell(row=2, column=i).value = ws.cell(row=2, column=i).value.split(
             "_"
         )[0]
+    all_rows = ws.iter_rows(
+        min_row=1, min_col=1, max_col=1 + 2 * len(frames), max_row=5000
+    )
+    print(next(all_rows))
+    for row in all_rows:
+        for col in row:
+            col.alignment = alignment
     workbook.save(filename)
 
 
