@@ -41,7 +41,9 @@ def test_merge_list(sample_data):
 
 
 def test_main(sample_data):
-    main("")  # Look in current dir
-    expected = pd.read_csv("data/final.csv", index_col="part")
-    output = pd.read_csv("output.csv", index_col="part")  # file created
+    main()  # Look in current dir
+    expected = pd.read_excel("data/final.xlsx", index_col="part")
+    output = pd.read_excel(
+        "price_list_compare.xlsx", index_col="part"
+    )  # file created
     assert_frame_equal(output, expected)

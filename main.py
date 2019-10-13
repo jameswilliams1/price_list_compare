@@ -3,6 +3,8 @@ import pandas as pd
 import glob
 import os
 from functools import reduce
+import sys
+import openpyxl as xl
 
 
 def compare(df_1, df_2):
@@ -11,8 +13,11 @@ def compare(df_1, df_2):
     return df.sort_values("part")
 
 
-def get_frames_from_dir(path="data/input"):
-    """Return a list of (name, dataframe) tuples from a directory."""
+def get_frames_from_dir(path):
+    """Return a list of (name, dataframe) tuples from a directory.
+
+    Uses current directory if none specified.
+    """
     all_files = glob.glob(os.path.join(path, "*.csv"))
     data_list = [
         (
@@ -32,10 +37,43 @@ def merge_frame_list(frame_list):
     return reduce(compare, map(lambda x: x[1], frame_list))
 
 
-def main(path):
-    """Write a joined csv file from a directory of csvs."""
-    pass
+def write_file(df, file_name):
+    """Write a dataframe to an xlsx file."""
+    writer = pd.ExcelWriter(f"{file_name}", engine="openpyxl")
+    df.to_excel(writer, sheet_name="Sheet1", startrow=1)
+    writer.save()
+
+
+def cleanup(filename, frames):
+    """Add company names from frames above data and tidy column names."""
+    workbook = xl.load_workbook(filename)
+    ws = workbook.active
+    for i in range(2, 2 * len(frames) + 1, 2):
+        ws.cell(row=1, column=i).value = frames[int(i / 2) - 1][0]
+        ws.merge_cells(
+            start_row=1, start_column=i, end_row=1, end_column=i + 1
+        )
+    for i in range(2, 2 * len(frames) + 2):
+        ws.cell(row=2, column=i).value = ws.cell(row=2, column=i).value.split(
+            "_"
+        )[0]
+    workbook.save(filename)
+
+
+def main(path=""):
+    """Write a joined csv file from a directory of csvs.
+
+    If no directory specified, uses the current one.
+    """
+    filename = "price_list_compare.xlsx"
+    frames = get_frames_from_dir(path=path)
+    if not frames:
+        print("No CSVs found in specified directory.")
+        sys.exit(1)
+    merged = merge_frame_list(frames)
+    write_file(merged, filename)
+    cleanup(filename, frames)
 
 
 if __name__ == "__main__":
-    pass
+    main()

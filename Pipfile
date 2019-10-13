@@ -8,6 +8,7 @@ pytest = "*"
 
 [packages]
 pandas = "*"
+openpyxl = "*"
 
 [requires]
 python_version = "3.7"
