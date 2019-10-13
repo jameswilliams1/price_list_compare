@@ -28,8 +28,10 @@ def merge_frame_list(frame_list):
 
     Returns final processed    dataframe.
     """
-
-    pass
+    df = frame_list[0][1]  # start with first df
+    for i in range(1, len(frame_list)):  # iterate remaining dfs and merge
+        df = compare(df, frame_list[i][1])
+    return df
 
 
 if __name__ == "__main__":
