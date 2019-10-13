@@ -11,18 +11,26 @@ def compare(df_1, df_2):
 
 
 def get_frames_from_dir(path="data/input"):
-    """Return a dictionary of name: dataframe from a directory."""
+    """Return a list of (name, dataframe) tuples from a directory."""
     all_files = glob.glob(os.path.join(path, "*.csv"))
-    data_dict = {
-        os.path.basename(filename).split(".")[0]: pd.read_csv(
-            filename, index_col="part"
+    data_list = [
+        (
+            os.path.basename(filename).split(".")[0],
+            pd.read_csv(filename, index_col="part"),
         )
         for filename in all_files
-    }
-    return data_dict
+    ]
+    return sorted(data_list, key=lambda tup: tup[0])
+
+
+def merge_frame_list(frame_list):
+    """Merge a list of (name: frame) tuples using compare.
+
+    Returns final processed    dataframe.
+    """
+
+    pass
 
 
 if __name__ == "__main__":
-    a = pd.read_csv("data/input/companyA.csv", index_col="part")
-    b = pd.read_csv("data/input/companyB.csv", index_col="part")
-    # print(compare(a, b))
+    pass

@@ -1,5 +1,5 @@
 import pandas as pd
-from main import compare
+from main import compare, get_frames_from_dir
 from pandas.testing import assert_frame_equal
 import pytest
 
@@ -19,4 +19,11 @@ def test_compare(sample_data):
 
 def test_get_names_from_dir(sample_data):
     folder = "data/input"
-    expected = {"CompanyA": None, "CompanyB": None}
+    expected = [("companyA", sample_data[0]), ("companyB", sample_data[1])]
+    output = get_frames_from_dir(folder)
+    print(output)
+    assert list(map(lambda x: x[0], output)) == list(
+        map(lambda x: x[0], expected)
+    )
+    for i in range(len(output)):
+        assert_frame_equal(output[i][1], expected[i][1])
