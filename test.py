@@ -38,3 +38,10 @@ def test_merge_list(sample_data):
     output = merge_frame_list(frame_list)
     expected = sample_data[4]
     assert_frame_equal(output, expected)
+
+
+def test_main(sample_data):
+    main("")  # Look in current dir
+    expected = pd.read_csv("data/final.csv", index_col="part")
+    output = pd.read_csv("output.csv", index_col="part")  # file created
+    assert_frame_equal(output, expected)

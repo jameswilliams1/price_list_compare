@@ -2,6 +2,7 @@
 import pandas as pd
 import glob
 import os
+from functools import reduce
 
 
 def compare(df_1, df_2):
@@ -26,12 +27,14 @@ def get_frames_from_dir(path="data/input"):
 def merge_frame_list(frame_list):
     """Merge a list of (name: frame) tuples using compare.
 
-    Returns final processed    dataframe.
+    Returns final processed dataframe.
     """
-    df = frame_list[0][1]  # start with first df
-    for i in range(1, len(frame_list)):  # iterate remaining dfs and merge
-        df = compare(df, frame_list[i][1])
-    return df
+    return reduce(compare, map(lambda x: x[1], frame_list))
+
+
+def main(path):
+    """Write a joined csv file from a directory of csvs."""
+    pass
 
 
 if __name__ == "__main__":
