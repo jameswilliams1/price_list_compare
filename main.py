@@ -63,7 +63,6 @@ def cleanup(filename, frames):
     all_rows = ws.iter_rows(
         min_row=1, min_col=1, max_col=1 + 2 * len(frames), max_row=5000
     )
-    print(next(all_rows))
     for row in all_rows:
         for col in row:
             col.alignment = alignment
