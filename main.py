@@ -18,11 +18,11 @@ def get_frames_from_dir(path):
 
     Uses current directory if none specified.
     """
-    all_files = glob.glob(os.path.join(path, "*.csv"))
+    all_files = glob.glob(os.path.join(path, "*.xlsx"))
     data_list = [
         (
             os.path.basename(filename).split(".")[0],
-            pd.read_csv(filename, index_col="part"),
+            pd.read_excel(filename, index_col="part"),
         )
         for filename in all_files
     ]
@@ -61,14 +61,14 @@ def cleanup(filename, frames):
 
 
 def main(path=""):
-    """Write a joined csv file from a directory of csvs.
+    """Write a joined xlsx file from a directory of xlsx files.
 
     If no directory specified, uses the current one.
     """
     filename = "price_list_compare.xlsx"
     frames = get_frames_from_dir(path=path)
     if not frames:
-        print("No CSVs found in specified directory.")
+        print("No spreadsheets found in specified directory.")
         sys.exit(1)
     merged = merge_frame_list(frames)
     write_file(merged, filename)
@@ -76,4 +76,4 @@ def main(path=""):
 
 
 if __name__ == "__main__":
-    main()
+    main("data/input")

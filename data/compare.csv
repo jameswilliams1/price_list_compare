@@ -1,4 +1,4 @@
-part,priceA,oemA,priceB,oemB
+part,price_x,oem_x,price_y,oem_y
 a,1,q,1,y
 b,2,w,2,i
 c,3,e,2,u

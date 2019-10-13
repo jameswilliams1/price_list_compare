@@ -6,9 +6,9 @@ import pytest
 
 @pytest.fixture
 def sample_data():
-    data1 = pd.read_csv("data/input/companyA.csv", index_col="part")
-    data2 = pd.read_csv("data/input/companyB.csv", index_col="part")
-    data3 = pd.read_csv("data/input/companyC.csv", index_col="part")
+    data1 = pd.read_excel("data/input/companyA.xlsx", index_col="part")
+    data2 = pd.read_excel("data/input/companyB.xlsx", index_col="part")
+    data3 = pd.read_excel("data/input/companyC.xlsx", index_col="part")
     frame_list_2 = [("companyA", data1), ("companyB", data2)]
     frame_list_3 = frame_list_2.copy()
     frame_list_3.append(("companyC", data3))
@@ -41,9 +41,12 @@ def test_merge_list(sample_data):
 
 
 def test_main(sample_data):
-    main()  # Look in current dir
-    expected = pd.read_excel("data/final.xlsx", index_col="part")
+    main("data/input")  # Look in current dir
+    expected = pd.read_excel("data/final.xlsx", skiprows=1, index_col="part")
     output = pd.read_excel(
-        "price_list_compare.xlsx", index_col="part"
+        "price_list_compare.xlsx", skiprows=1, index_col="part"
     )  # file created
+    print(output)
+    print("")
+    print(expected)
     assert_frame_equal(output, expected)
